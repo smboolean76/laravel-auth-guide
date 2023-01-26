@@ -8,8 +8,8 @@
 
 ## Setup progetto con autenticazione
 
-- Installiamo il pacchetto laravel ui `composer require laravel/breeze --dev`
-- Creiamo lo scaffolding di default con blade (opzione 0) `php artisan breeze:install`
+- Installiamo il pacchetto laravel breeze `composer require laravel/breeze --dev`
+- Creiamo lo scaffolding di default con blade (opzione 0, no, no) `php artisan breeze:install`
 - Installiamo il pacchetto di preset `composer require pacificdev/laravel_9_preset`
 - Lanciamo il comando di preset con auth `php artisan preset:ui bootstrap --auth`
 - Installiamo e compiliamo gli asset `npm install && npm run dev`
@@ -27,12 +27,12 @@ definiamo ora le rotte per la parte di backoffice, raggruppandole con namespace,
 ```php
 // routes/web.php
 
-// 🕊️ Rotte pubbliche
+// 🕊️ Rotte pubbliche del frontoffice
 Route::get('/', function () {
     return view('welcome');
 });
 
-// 🚫 Tutte le rotte protette da autenticazione
+// 🚫 Tutte le rotte protette da autenticazione del backoffice
 Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.dashboard');
@@ -69,7 +69,7 @@ class RouteServiceProvider extends ServiceProvider
 
 #### Layout base per dashboard
 
-Creiamo il file `layouts/admin.blade.php`, che sarà il layout da utilizzare per la dashboard e tutte le pagine del back-office.
+Creiamo il file `layouts/admin.blade.php`, che sarà il layout da utilizzare per la dashboard e tutte le pagine del backoffice.
 
 ```html
 <!DOCTYPE html>
@@ -184,7 +184,7 @@ Creiamo il file `layouts/admin.blade.php`, che sarà il layout da utilizzare per
 #### Organizzazione views admin
 
 Creaiamo una sottocartella `resources/views/admin/` e copiamoci il file **dashboard.blade.php**.
-In questa cartella inseriremo, divise per cartelle, tutte le views delle nostre CRUD di **backoffice**.
+Qui inseriremo, divise per cartelle, tutte le views delle nostre CRUD di **backoffice**.
 
 #### Modifica file dashboard.blade.php
 
@@ -202,10 +202,13 @@ Es.
 ### Gestire le rotte
 
 Aggiungiamo nel gruppo delle rotte protette da autenticazione la rotta per le CRUD di ogni singola risorsa.
+**N.B** Verifica che il controller sia stato importato
 Es.
 
 ```php
 // routes/web.php
+
+use App\Http\Controllers\Admin\PostController;
 
 // ...
 
